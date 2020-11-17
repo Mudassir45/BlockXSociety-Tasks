@@ -24,19 +24,19 @@ contract TimeLocked {
         admin = msg.sender;
         time[msg.sender] = now.add(30 days);
     }
+
+    receive() external payable {
+        emit FundsRecieved(msg.sender, msg.value);        
+    }
+
+    function getBalance() external view returns(uint) {
+        return address(this).balance;
+    }
     
     function withdrawFunds(address payable _to, uint _amount) public onlyOwner() {
         require(_amount <= address(this).balance, "Sorry! There are not enough funds stored in the smart contract");
         require(now >= time[_to], "Sorry! You cannot withdraw funds until time is over");
         _to.transfer(_amount);
         emit FundsSent(_to, _amount);
-    }
-    
-    function getBalance() external view returns(uint) {
-        return address(this).balance;
-    }
-    
-    receive() external payable {
-        emit FundsRecieved(msg.sender, msg.value);        
     }
 }
