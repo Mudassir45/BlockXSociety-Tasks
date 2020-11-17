@@ -18,6 +18,7 @@ contract SimpleWallet is Ownable {
     function getBalance() external view returns(uint) {
         return address(this).balance;
     }
+    
     function withdrawPayment(address payable _to, uint _amount) public onlyOwner() {
         require(_amount <= address(this).balance, "There are not enough funds stored in the smart contract");
         _to.transfer(_amount);
